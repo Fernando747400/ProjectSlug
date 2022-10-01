@@ -1,44 +1,41 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LifeBar : MonoBehaviour
 {
-    public Image LifeBarSprite;
+    [Header("Dependendices")]
+    [SerializeField] private Image _lifeBarImage;
 
-    public float maxLife;
+    [Header("Settings")]
+    [SerializeField] private float _maxLife;
 
-    public float actualLife;
-
+    private float _currentLife;
+    public float MaxLife { get => _maxLife; set => _maxLife = value; } 
 
     void Start()
     {
-        actualLife = maxLife;
+        _currentLife = _maxLife;
+        //TODO healthEvent += UpdateLifeBar;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void RecieveDamage(float damage)
     {
-        //LifeBarSprite.fillAmount = actualLife / maxLife;        
-
-      
-       
-
-        Debug.Log(actualLife);
+        _currentLife -= damage;
+        Mathf.Clamp(_currentLife, 0, MaxLife);
     }
 
-
-    public void Damage(float damage)
+    public void Heal(float health)
     {
-        actualLife -= damage;
-        if (actualLife <= 0) actualLife = 0;
+        _currentLife += health;
+        Mathf.Clamp(_currentLife, 0, MaxLife);
     }
 
-    public void Health(float health)
+    private void UpdateLifeBar() // This method needs to be susbcribed to the life event. 
     {
-        actualLife += health;
-        if (actualLife >= maxLife) actualLife = maxLife;
+        _lifeBarImage.fillAmount = Mathf.InverseLerp(0, _maxLife, _currentLife);
     }
 
 }
