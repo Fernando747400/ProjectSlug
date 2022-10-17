@@ -1,18 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class LifeSystem : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private float _lifeCurrent;
+    private float _lifeMax;
+
+    public float LifeCurrent { get { return _lifeCurrent; } set { _lifeCurrent = value; ClampHealth(); } }
+    public float LifeMax { get { return _lifeMax; }  set { _lifeMax = value; } }
+
+    public event Action DamageEvent;
+    public event Action HealthEvent;
+
+    public void Damage(float damageValue)
     {
-        
+        _lifeCurrent -= damageValue;
+        ClampHealth();
+        DamageEvent?.Invoke();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Heal(float healValue)
     {
-        
+        _lifeCurrent += healValue;
+        ClampHealth();
+        HealthEvent?.Invoke();
+    }
+    
+    private void ClampHealth()
+    {
+        _lifeCurrent = Math.Clamp(_lifeCurrent, 0, _lifeMax);
     }
 }
