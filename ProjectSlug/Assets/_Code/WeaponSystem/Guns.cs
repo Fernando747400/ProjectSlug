@@ -11,5 +11,6 @@ public class Guns : ScriptableObject
     public float bulletspread;
     public float lifecost;
     public float damage;
+    public float bulletspeed;
     
 }
