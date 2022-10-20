@@ -14,6 +14,6 @@ public class PlayerFire : MonoBehaviour
     {
         GameObject bullet = Instantiate(_bulletPrefab, this.transform.position + this.transform.forward * 2, Quaternion.identity, this.transform);
         bullet.transform.parent = null;
-        bullet.GetComponent<Bullet>().Speed = _bulletSpeed;
+        bullet.GetComponent<Bullet>().Speed = _bulletSpeed; 
     }
 }
