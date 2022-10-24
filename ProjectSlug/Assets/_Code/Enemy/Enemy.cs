@@ -1,100 +1,95 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Threading;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour, iDaño
+public class Enemy : MonoBehaviour, IGeneralTarget
 {
-    [SerializeField] private float vida;
+    [SerializeField] private float LifeBar;
 
-    public int rutina;
-    public float cronometro;
-    // public Animator ani;
-    public int direccion;
-    public float speed_walk;
-    public float speed_run;
-    public GameObject target;
-    public bool atacando;
+    private int _rutine;
+    private float _chronometer;
+    // private Animator animation;
+    private int _direction;
+    private float _speed_walk;
+    private float _speed_run;
+    private GameObject _target;
+    public bool attacking;
 
-    public float rango_vision;
-    public float rango_ataque;
-    public GameObject rango;
-    public GameObject Hit;
+    private float _visual_range;
+    private float _attack_range;
+    private GameObject _range;
+    private GameObject _Hit;
 
     void Start()
     {
-        // ani = GetComponent<Animator>();
-        target = GameObject.Find("Player");
+        // animation = GetComponent<Animator>();
+        _target = GameObject.Find("Player");
     }
 
     void Update()
     {
-        Comportamientos();
+        Behavours();
     }
 
-    public void Comportamientos()
-    {       
-        if (Math.Abs(transform.position.x - target.transform.position.x) > rango_vision && !atacando)
+    public void Behavours()
+    {
+        if (Mathf.Abs(transform.position.x - _target.transform.position.x) > _visual_range && !attacking)
         {
-            // ani.SetBool("run", false);
-            cronometro += 1 * Time.deltaTime;
-            if (cronometro >= 4)
+            // animation.SetBool("run", false);
+            _chronometer += 1 * Time.deltaTime;
+            if (_chronometer >= 4)
             {
-                rutina = UnityEngine.Random.Range(0, 2);
-                cronometro = 0;
-                switch (rutina)
+                _rutine = UnityEngine.Random.Range(0, 2);
+                _chronometer = 0;
+                switch (_rutine)
                 {
                     case 0:
-                        // ani.SetBool("walk", false); 
+                        // animation.SetBool("walk", false); 
                         break;
                     case 1:
-                        direccion = UnityEngine.Random.Range(0, 2);
-                        rutina++;
+                        _direction = UnityEngine.Random.Range(0, 2);
+                        _rutine++;
                         break;
                     case 2:
-                        switch (direccion)
+                        switch (_direction)
                         {
                             case 0:
                                 transform.rotation = Quaternion.Euler(0, 0, 0);
-                                transform.Translate(Vector3.right * speed_walk * Time.deltaTime);
+                                transform.Translate(Vector3.right * _speed_walk * Time.deltaTime);
                                 break;
                             case 1:
                                 transform.rotation = Quaternion.Euler(0, 180, 0);
-                                transform.Translate(Vector3.right * speed_walk * Time.deltaTime);
+                                transform.Translate(Vector3.right * _speed_walk * Time.deltaTime);
                                 break;
                         }
-                        // ani.SetBool("walk",true);
+                        // animation.SetBool("walk",true);
                         break;
                 }
-            }           
+            }
             else
             {
-                if(Math.Abs(transform.position.x - target.transform.position.x) > rango_ataque && !atacando)
+                if (Mathf.Abs(transform.position.x - _target.transform.position.x) > _attack_range && !attacking)
                 {
-                    if(transform.position.x < target.transform.position.x)
+                    if (transform.position.x < _target.transform.position.x)
                     {
-                        // ani.SetBool("walk", false);
-                        // ani.SetBool("run", true);
-                        transform.Translate(Vector3.right * speed_run * Time.deltaTime);
+                        // animation.SetBool("walk", false);
+                        // animation.SetBool("run", true);
+                        transform.Translate(Vector3.right * _speed_run * Time.deltaTime);
                         transform.rotation = Quaternion.Euler(0, 0, 0);
-                        // ani.SetBool("attack", false);
+                        // animation.SetBool("attack", false);
                     }
                     else
                     {
-                        // ani.SetBool("walk", false);
-                        // ani.SetBool("run", true);
-                        transform.Translate(Vector3.right * speed_run * Time.deltaTime);
+                        // animation.SetBool("walk", false);
+                        // animation.SetBool("run", true);
+                        transform.Translate(Vector3.right * _speed_run * Time.deltaTime);
                         transform.rotation = Quaternion.Euler(0, 180, 0);
-                        // ani.SetBool("attack", false);
+                        // animation.SetBool("attack", false);
                     }
                 }
                 else
                 {
-                    if (!atacando)
+                    if (!attacking)
                     {
-                        if (transform.position.x < target.transform.position.x)
+                        if (transform.position.x < _target.transform.position.x)
                         {
                             transform.rotation = Quaternion.Euler(0, 0, 0);
                         }
@@ -102,44 +97,37 @@ public class Enemy : MonoBehaviour, iDaño
                         {
                             transform.rotation = Quaternion.Euler(0, 180, 0);
                         }
-                        // ani.SetBool("walk", false);
-                        // ani.SetBool("run", false);
+                        // animation.SetBool("walk", false);
+                        // animation.SetBool("run", false);
                     }
                 }
             }
-        }    
-    }
-        
-
-    public void Final_Ani()
-    {
-        // ani.SetBool("attack", false);
-        atacando = false;
-        rango.GetComponent<BoxCollider2D>().enabled = true;
-    }
-
-    public void ColliderWeaponTrue()
-    {
-        Hit.GetComponent<BoxCollider2D>().enabled = true;
-    }
-
-    public void ColliderWeaponFalse()
-    {
-        Hit.GetComponent<BoxCollider2D>().enabled = false;
-    }
-
-    private void Muerte()
-    {
-        // Aquí va la animación de muerte //
-    }
-
-    public void TomarDaño(float daño)
-    {
-        vida -= (daño * 2);
-        if(vida<=0)
-        {
-            Muerte();
         }
     }
 
+
+    private void Final_Animation()
+    {
+        // animation.SetBool("attack", false);
+        attacking = false;
+        _range.GetComponent<BoxCollider2D>().enabled = true;
+    }
+
+    public void ColliderWeaponTrue() => _Hit.GetComponent<BoxCollider2D>().enabled = true;
+
+    public void ColliderWeaponFalse() => _Hit.GetComponent<BoxCollider2D>().enabled = false;
+
+    public void Dead()
+    {
+        // Here is the dead animation //
+    }
+
+     void IGeneralTarget.TakeDamage(float damage)
+    {
+        LifeBar -= (damage * 2);
+        if (LifeBar <= 0)
+        {
+            Dead();
+        }
+    }
 }

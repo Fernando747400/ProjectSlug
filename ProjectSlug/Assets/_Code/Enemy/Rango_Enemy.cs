@@ -1,33 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Rango_Enemy : MonoBehaviour
 {
     // public Animator ani;
-    public Enemy enemigo;
+    public Enemy enemy;
 
     void OnTriggerEnter2D(Collider2D coll)
     {
-        if(coll.CompareTag("Player"))
+        if (coll.CompareTag("Player"))
         {
-            // ani.SetBool("walk", false);
-            // ani.SetBool("run", false);
-            // ani.SetBool("attack", true);
-            enemigo.atacando = true;
+            // animation.SetBool("walk", false);
+            // animation.SetBool("run", false);
+            // animation.SetBool("attack", true);
+            enemy.attacking = true;
             GetComponent<BoxCollider2D>().enabled = false;
         }
-    }
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
